@@ -77,6 +77,7 @@ Following Richards & Ford, capture a decision when it affects:
 | [0013](cross-cutting/0013-structured-logging-never-log-secrets.md) | Use structured logging, never `println!`, and never log secrets |
 | [0014](cross-cutting/0014-axum-standard-http-framework.md) | Axum is the standard HTTP framework for Rust services |
 | [0015](cross-cutting/0015-sqlx-standard-db-client.md) | SQLx is the standard DB client — no raw-driver, hand-rolled models (extends 0002) |
+| [0016](cross-cutting/0016-scope-based-authorization-from-roles.md) | Authorization is scope/capability-based, derived from roles at token-mint time |
 
 ### [starflask-monorepo](starflask-monorepo/) — multi-language generation platform
 
