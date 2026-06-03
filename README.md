@@ -56,6 +56,15 @@ Following Richards & Ford, capture a decision when it affects:
 - **Interfaces** — API shape, error contracts, published types
 - **Construction** — libraries, frameworks, tooling, build/deploy, enforcement rules
 
+## Enforcement
+
+ADRs that can be machine-checked have starter configs in [`enforcement/`](enforcement/) — a
+`clippy.toml`, `[workspace.lints]` blocks, a cargo-deny `deny.toml`, an ESLint flat-config snippet,
+and a CI script (`adr-checks.sh`) for the rules a linter can't express. Copy them into a target repo
+and wire them into CI. See [`enforcement/README.md`](enforcement/README.md) for the rule→ADR→mechanism
+map and the two intentional carve-outs (boot may panic; tests may be loose). This is the part that
+makes the rules "the linter won't let you commit it" rather than just documentation.
+
 ## Index
 
 ### Cross-cutting (the house style — applies to all repos)

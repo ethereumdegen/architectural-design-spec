@@ -1,0 +1,30 @@
+# deny.toml — for cargo-deny (https://github.com/EmbarkStudios/cargo-deny).
+#   cargo install cargo-deny
+#   cargo deny check bans
+#
+# Bans the legacy/forbidden crates so a non-conforming dependency fails CI. Note: sqlx-postgres has
+# its own protocol implementation and does NOT pull in tokio-postgres, so banning tokio-postgres is
+# safe and won't hit SQLx.
+
+[bans]
+multiple-versions = "allow"   # not what we're policing here
+
+deny = [
+  # ADR-0014: Axum is the standard HTTP framework; actix-web is legacy (see indiefuture2).
+  { name = "actix-web",  reason = "ADR-0014: standardize on Axum" },
+  { name = "actix-cors", reason = "ADR-0014: use tower-http CORS with Axum" },
+  { name = "actix-multipart", reason = "ADR-0014: use Axum multipart" },
+
+  # ADR-0015: SQLx is the standard DB client; no raw driver / thin wrappers.
+  { name = "tokio-postgres", reason = "ADR-0015: use SQLx" },
+  { name = "postgres",       reason = "ADR-0015: use SQLx" },
+  { name = "degen-sql",      reason = "ADR-0015: use SQLx (legacy in indiefuture2)" },
+
+  # ADR-0002: no general-purpose ORM.
+  { name = "diesel",  reason = "ADR-0002: SQLx with hand-written, compile-checked SQL — no ORM" },
+  { name = "sea-orm", reason = "ADR-0002: no ORM" },
+  { name = "rbatis",  reason = "ADR-0002: no ORM" },
+]
+
+# `skip` lets you grandfather a crate during a migration, e.g. while indiefuture2 is ported:
+# skip = [ { name = "tokio-postgres" } ]

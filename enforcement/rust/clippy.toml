@@ -1,0 +1,21 @@
+# clippy.toml — place at the workspace root; Clippy reads it automatically.
+# Enforces the parts of the house style Clippy can express via config.
+# Lint *levels* (unwrap_used, print_stdout, …) live in Cargo.toml — see workspace-lints.toml.
+
+# --- ADR-0010 / ADR-0013: don't punish test code with request-path rules ---
+allow-unwrap-in-tests = true
+allow-expect-in-tests = true
+allow-dbg-in-tests    = true
+allow-print-in-tests  = true
+
+# --- ADR-0005 / ADR-0010: configuration is read once, at boot, into the typed AppConfig ---
+# Reading env anywhere but the config module is the anti-pattern (see indiefuture2:
+# auth_controller.rs:95, chat_controller.rs:174). Clippy can't path-scope, so we ban globally
+# and the config module opts back in:
+#   // src/config.rs
+#   #![allow(clippy::disallowed_methods)]
+disallowed-methods = [
+  { path = "std::env::var",     reason = "ADR-0005/0010: read env only at boot, in the config module (allow there)" },
+  { path = "std::env::var_os",  reason = "ADR-0005/0010: read env only at boot, in the config module (allow there)" },
+  { path = "std::env::vars",    reason = "ADR-0005/0010: read env only at boot, in the config module (allow there)" },
+]

@@ -1,0 +1,36 @@
+# workspace-lints.toml — NOT a standalone file. Paste these blocks into your workspace `Cargo.toml`.
+#
+# Then, in EVERY member crate's Cargo.toml, opt in with:
+#   [lints]
+#   workspace = true
+#
+# CI: `cargo clippy --all-targets -- -D warnings` turns every "warn"/"deny" below into a build failure.
+
+# ---------------------------------------------------------------------------
+# [workspace.lints.clippy]
+# ---------------------------------------------------------------------------
+[workspace.lints.clippy]
+# ADR-0010: no panics on request paths. (Tests + the boot/config module are exempted — see
+# clippy.toml `allow-*-in-tests` and the `#![allow(...)]` on src/config.rs / main.rs startup.)
+unwrap_used   = "deny"
+expect_used   = "deny"
+panic         = "deny"
+unreachable   = "deny"
+todo          = "deny"
+# Optional, noisier — uncomment if you want array indexing forced through `.get()` on request paths:
+# indexing_slicing = "warn"
+
+# ADR-0013: structured logging only — no stray prints or debug macros in committed code.
+print_stdout  = "deny"
+print_stderr  = "deny"
+dbg_macro     = "deny"
+
+# ADR-0005/0010: make the `disallowed-methods` list in clippy.toml a hard failure.
+disallowed_methods = "deny"
+
+# ---------------------------------------------------------------------------
+# [workspace.lints.rust]
+# ---------------------------------------------------------------------------
+[workspace.lints.rust]
+unsafe_code        = "forbid"   # house stack has no need for unsafe; force a deliberate exception
+unused_must_use    = "deny"     # never silently drop a Result/Future
