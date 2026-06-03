@@ -70,7 +70,13 @@ Following Richards & Ford, capture a decision when it affects:
 | [0006](cross-cutting/0006-postgres-job-queue-skip-locked.md) | Background work runs on a Postgres queue with `FOR UPDATE SKIP LOCKED`, no broker |
 | [0007](cross-cutting/0007-zustand-per-domain-stores.md) | Frontend state lives in per-domain Zustand stores, not Redux/Context |
 | [0008](cross-cutting/0008-single-typed-api-client.md) | The frontend talks to the backend through one typed API client |
-| [0009](cross-cutting/0009-centralized-json-error-contract.md) | Errors map through one central type to a `{ "error": message }` JSON contract |
+| [0009](cross-cutting/0009-centralized-json-error-contract.md) | ~~Errors map through one central type to a `{ "error": message }` JSON contract~~ (superseded by 0012) |
+| [0010](cross-cutting/0010-no-panics-on-request-paths.md) | No panics on request paths; fail-fast belongs at boot, not in handlers |
+| [0011](cross-cutting/0011-credentials-in-headers-not-payload.md) | Auth credentials travel in headers/cookies, never in request bodies or query strings |
+| [0012](cross-cutting/0012-errors-map-to-correct-http-status.md) | Errors map to their correct HTTP status — never collapse to 500 (supersedes 0009) |
+| [0013](cross-cutting/0013-structured-logging-never-log-secrets.md) | Use structured logging, never `println!`, and never log secrets |
+| [0014](cross-cutting/0014-axum-standard-http-framework.md) | Axum is the standard HTTP framework for Rust services |
+| [0015](cross-cutting/0015-sqlx-standard-db-client.md) | SQLx is the standard DB client — no raw-driver, hand-rolled models (extends 0002) |
 
 ### [starflask-monorepo](starflask-monorepo/) — multi-language generation platform
 

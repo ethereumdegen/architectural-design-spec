@@ -1,9 +1,14 @@
 # ADR-0009: Errors map through one central type to a `{ "error": message }` JSON contract
 
-- **Status:** Accepted
+- **Status:** Superseded by [ADR-0012](0012-errors-map-to-correct-http-status.md)
 - **Date:** 2026-06-03
 - **Scope:** cross-cutting (noblevida-web, starflask-monorepo)
 - **Deciders:** Andy
+
+> **Superseded.** This ADR established the central error type and the `{ "error": message }`
+> contract but left HTTP status codes unspecified. [ADR-0012](0012-errors-map-to-correct-http-status.md)
+> retains that contract and adds the required status-code mapping (no collapsing client faults to
+> 500). Conform to ADR-0012.
 
 ## Context
 
