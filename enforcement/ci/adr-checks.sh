@@ -5,6 +5,13 @@
 # These are deliberately simple greps: a noisy reminder beats silent drift. Tune the paths/patterns
 # for the repo. Hard gates here back up the lint/cargo-deny gates for environments where those don't
 # run; warn gates are pure reminders.
+#
+# Carve-outs (learned from auditing real repos):
+#  - CLI/ops tooling under src/bin/** and **/scripts/** is EXEMPT from the SQL-in-db and no-println
+#    gates: those programs read env at boot, print to stdout, and run direct SQL by design.
+#  - The credential-field gate is struct-aware: it only flags *inbound* DTOs (structs named
+#    *Input/*Request/*Payload/*Body/*Query/*Form/*Params/*Dto), never outbound API-response structs
+#    (e.g. an OAuth `GoogleTokenResponse { access_token }`).
 set -uo pipefail
 
 fail=0
@@ -12,20 +19,21 @@ say()  { printf '%s\n' "$*"; }
 hard() { say "❌ HARD  [$1] $2"; fail=1; }
 warn() { say "⚠️  WARN  [$1] $2"; }
 
-# Where source lives (Rust + TS). Adjust if your layout differs.
 RS_GLOB='--include=*.rs'
 SRC_DIRS=$(find . -type d -name src -not -path '*/target/*' -not -path '*/node_modules/*' 2>/dev/null)
 [ -z "$SRC_DIRS" ] && SRC_DIRS=.
 
 # Grep helper: matches in src, excluding tests/build/vendor. Prints file:line.
 scan() { grep -rnE $RS_GLOB --exclude-dir=target --exclude-dir=node_modules "$1" $SRC_DIRS 2>/dev/null; }
+# Drop CLI/ops tooling (bins + scripts dirs) — exempt from app-code gates.
+no_tooling() { grep -vE '/(bin|scripts)/'; }
 
 say "── ADR conformance checks ─────────────────────────────────────────"
 
-# ADR-0002 / ADR-0015 (HARD): SQL belongs only in db/ modules.
-sql_outside_db=$(scan 'sqlx::query' | grep -vE '/db/|/db\.rs' || true)
+# ADR-0002 / ADR-0015 (HARD): SQL belongs only in db/ modules — app code only (bins/scripts exempt).
+sql_outside_db=$(scan 'sqlx::query' | no_tooling | grep -vE '/db/|/db\.rs' || true)
 if [ -n "$sql_outside_db" ]; then
-  hard "ADR-0002" "sqlx::query* used outside a db/ module — move it into db/:"
+  hard "ADR-0002" "sqlx::query* used in app code outside a db/ module — move it into db/:"
   printf '   %s\n' "$sql_outside_db"
 fi
 
@@ -43,12 +51,27 @@ if [ -n "$actix" ]; then
   printf '   %s\n' "$actix"
 fi
 
-# ADR-0011 (WARN): credential-shaped fields in structs (likely a request DTO carrying a token).
-# Excludes the login DTO (password is legitimate there) and *token model* definitions.
-creds=$(scan '^[[:space:]]*(pub[[:space:]]+)?(auth_token|access_token|session_token|api_key)[[:space:]]*:' \
-        | grep -viE 'login|access_tokens_model|token_model|models/' || true)
+# ADR-0011 (WARN): credential-shaped field in an *inbound* DTO. Struct-aware: only flags fields
+# inside request structs (Input/Request/Payload/Body/Query/Form/Params/Dto), never *Response/*Info,
+# and skips CLI tooling. Avoids the "OAuth response struct" false positive.
+rs_files=$(find $SRC_DIRS -name '*.rs' -not -path '*/target/*' 2>/dev/null | grep -vE '/(bin|scripts)/')
+creds=""
+if [ -n "$rs_files" ]; then
+  creds=$(printf '%s\n' "$rs_files" | xargs awk '
+    FNR==1 { inbound=0 }
+    /struct[ \t]+[A-Za-z0-9_]+/ {
+      for (i=1;i<=NF;i++) if ($i=="struct") { s=$(i+1); break }
+      gsub(/[^A-Za-z0-9_].*/,"",s)
+      inbound = (s ~ /(Input|Request|Payload|Body|Query|Form|Params|Dto)/) && (s !~ /(Response|Resp|Info|Output)/)
+    }
+    /(auth_token|access_token|session_token|api_key)[ \t]*:/ {
+      # struct fields never contain "=" or "let" — excludes local bindings typed as a response
+      if (inbound && $0 !~ /=/ && $0 !~ /(^|[ \t])let[ \t]/) printf "%s:%d:%s\n", FILENAME, FNR, $0
+    }
+  ' 2>/dev/null || true)
+fi
 if [ -n "$creds" ]; then
-  warn "ADR-0011" "credential-shaped field — credentials belong in headers/cookies, not payloads:"
+  warn "ADR-0011" "credential-shaped field in an inbound DTO — credentials belong in headers/cookies:"
   printf '   %s\n' "$creds"
 fi
 
@@ -59,10 +82,10 @@ if [ -n "$inline_scope" ]; then
   printf '   %s\n' "$inline_scope"
 fi
 
-# ADR-0013 (WARN): stray prints (backs up the clippy gate for non-clippy environments).
-prints=$(scan '\b(println!|eprintln!|dbg!)\(' || true)
+# ADR-0013 (WARN): stray prints in app code (bins/scripts exempt — CLI output is their purpose).
+prints=$(scan '\b(println!|eprintln!|dbg!)\(' | no_tooling || true)
 if [ -n "$prints" ]; then
-  warn "ADR-0013" "println!/dbg! in source — use the structured logger:"
+  warn "ADR-0013" "println!/dbg! in app code — use the structured logger:"
   printf '   %s\n' "$prints"
 fi
 

@@ -39,7 +39,7 @@ frontend). Drop them into a target repo, tune paths, and wire `adr-checks.sh` in
 > **CORS** (the rejected-for-now rule): `adr-checks.sh` *warns* on `allow_any_origin` but never
 > fails the build, per the decision to hold off on a binding CORS ADR.
 
-## The two intentional carve-outs
+## The three intentional carve-outs
 
 1. **Boot may panic.** `unwrap`/`expect` and `std::env::var` are legitimate in the config module and
    `main.rs` startup. Scope the allow narrowly:
@@ -49,6 +49,21 @@ frontend). Drop them into a target repo, tune paths, and wire `adr-checks.sh` in
    ```
 2. **Tests may be loose.** `clippy.toml` sets `allow-unwrap-in-tests`, `allow-expect-in-tests`,
    `allow-dbg-in-tests`, `allow-print-in-tests` so test code isn't punished by the request-path rules.
+3. **CLI/ops tooling is exempt.** Programs under `src/bin/**` and `**/scripts/**` (migration runners,
+   seeders, stat dumpers) read env at boot, print to stdout, and run direct SQL *by design* —
+   that's their job, not a layering violation. `adr-checks.sh` skips them for the SQL-in-db,
+   no-println, and credential gates. Clippy can't path-scope `print_stdout`, so each such bin opts
+   back in at the top:
+   ```rust
+   // src/bin/migrate.rs  (a CLI tool — stdout is the interface)
+   #![allow(clippy::print_stdout, clippy::print_stderr)]
+   ```
+   *(Learned from auditing `noblevida-web`, where `src/bin/{migrate,pgstat,seed_*}.rs` tripped these
+   gates legitimately.)*
+
+The credential gate (ADR-0011) is also **struct-aware**: it only flags fields inside *inbound* DTOs
+(`*Input`/`*Request`/`*Payload`/`*Body`/`*Query`/`*Form`/`*Params`/`*Dto`), never outbound
+API-response structs — so an OAuth `GoogleTokenResponse { access_token }` is correctly ignored.
 
 ## Suggested CI shape
 
