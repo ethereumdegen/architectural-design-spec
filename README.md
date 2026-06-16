@@ -87,6 +87,7 @@ makes the rules "the linter won't let you commit it" rather than just documentat
 | [0014](cross-cutting/0014-axum-standard-http-framework.md) | Axum is the standard HTTP framework for Rust services |
 | [0015](cross-cutting/0015-sqlx-standard-db-client.md) | SQLx is the standard DB client — no raw-driver, hand-rolled models (extends 0002) |
 | [0016](cross-cutting/0016-scope-based-authorization-from-roles.md) | Authorization is scope/capability-based, derived from roles at token-mint time |
+| [0017](cross-cutting/0017-shared-helpers-in-a-neutral-module.md) | Shared helpers live in a neutral module, never borrowed sideways between sibling sub-applications |
 
 ### [starflask-monorepo](starflask-monorepo/) — multi-language generation platform
 
