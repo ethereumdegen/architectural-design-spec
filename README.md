@@ -88,6 +88,7 @@ makes the rules "the linter won't let you commit it" rather than just documentat
 | [0015](cross-cutting/0015-sqlx-standard-db-client.md) | SQLx is the standard DB client — no raw-driver, hand-rolled models (extends 0002) |
 | [0016](cross-cutting/0016-scope-based-authorization-from-roles.md) | Authorization is scope/capability-based, derived from roles at token-mint time |
 | [0017](cross-cutting/0017-shared-helpers-in-a-neutral-module.md) | Shared helpers live in a neutral module, never borrowed sideways between sibling sub-applications |
+| [0018](cross-cutting/0018-braille-spinner-standard-loading-indicator.md) | Braille-character text spinner (`unicode-animations`) is the standard loading indicator across all frontends |
 
 ### [starflask-monorepo](starflask-monorepo/) — multi-language generation platform
 
