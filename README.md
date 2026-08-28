@@ -89,6 +89,7 @@ makes the rules "the linter won't let you commit it" rather than just documentat
 | [0016](cross-cutting/0016-scope-based-authorization-from-roles.md) | Authorization is scope/capability-based, derived from roles at token-mint time |
 | [0017](cross-cutting/0017-shared-helpers-in-a-neutral-module.md) | Shared helpers live in a neutral module, never borrowed sideways between sibling sub-applications |
 | [0018](cross-cutting/0018-braille-spinner-standard-loading-indicator.md) | Braille-character text spinner (`unicode-animations`) is the standard loading indicator across all frontends |
+| [0019](cross-cutting/0019-unknown-is-a-third-state-not-the-default.md) | A control whose shape depends on an unfinished request renders the spinner, not a guess (async state is tri-state) |
 
 ### [starflask-monorepo](starflask-monorepo/) — multi-language generation platform
 
