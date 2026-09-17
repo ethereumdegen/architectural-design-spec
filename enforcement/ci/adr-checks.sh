@@ -96,6 +96,36 @@ if [ -n "$cors" ]; then
   printf '   %s\n' "$cors"
 fi
 
+# ── Terminal UI (ADR-0020..0024) — only meaningful in crates that draw a TUI ──────
+tui_crates=$(grep -rln --include=Cargo.toml '^ratatui' . --exclude-dir=target --exclude-dir=node_modules 2>/dev/null || true)
+if [ -n "$tui_crates" ]; then
+  # ADR-0020 (WARN): crossterm as a second direct dependency — use the ratatui re-export.
+  ct=$(printf '%s\n' "$tui_crates" | xargs grep -lE '^crossterm[ =]' 2>/dev/null || true)
+  [ -n "$ct" ] && { warn "ADR-0020" "direct crossterm dependency alongside ratatui — use ratatui::crossterm:"; printf '   %s\n' "$ct"; }
+
+  # ADR-0020 (WARN): terminal set up by hand loses ratatui::init's panic-restore hook.
+  raw=$(scan 'enable_raw_mode\(|EnterAlternateScreen' || true)
+  if [ -n "$raw" ] && ! scan 'ratatui::init\(' >/dev/null; then
+    warn "ADR-0020" "raw mode entered without ratatui::init() — a panic will leave the terminal broken:"
+    printf '   %s\n' "$raw"
+  fi
+
+  # ADR-0021 (WARN): a TUI with no rendered-screen test.
+  scan 'TestBackend' >/dev/null || warn "ADR-0021" "crate draws a TUI but no test renders a screen with TestBackend"
+
+  # ADR-0022 (WARN): named colours follow the user's theme; the house palette is RGB.
+  named=$(scan 'Color::(Red|Green|Blue|Yellow|Cyan|Magenta|White|Black|Gray|Grey)\b' || true)
+  [ -n "$named" ] && { warn "ADR-0022" "named ratatui colour — use the house Color::Rgb palette:"; printf '   %s\n' "$named"; }
+
+  # ADR-0023 (WARN): keys must be advertised — a crate that matches KeyCode::Char needs a key bar.
+  if scan "KeyCode::Char\\('" >/dev/null && ! scan 'fn draw_footer|footer|key bar|keybar' >/dev/null; then
+    warn "ADR-0023" "keys are handled but nothing draws a footer/key bar — every key must be on screen"
+  fi
+
+  # ADR-0024 (WARN): nothing derived from elapsed time means nothing on screen shows freshness.
+  scan 'elapsed\(\)' >/dev/null || warn "ADR-0024" "TUI never reads elapsed time — a live view must show that it is live"
+fi
+
 say "───────────────────────────────────────────────────────────────────"
 if [ "$fail" -ne 0 ]; then
   say "ADR checks FAILED (hard violations above)."

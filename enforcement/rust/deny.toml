@@ -20,6 +20,12 @@ deny = [
   { name = "postgres",       reason = "ADR-0015: use SQLx" },
   { name = "degen-sql",      reason = "ADR-0015: use SQLx (legacy in indiefuture2)" },
 
+  # ADR-0020: ratatui + crossterm is the only TUI stack.
+  { name = "cursive", reason = "ADR-0020: terminal UIs use ratatui" },
+  { name = "termion", reason = "ADR-0020: terminal UIs use ratatui + crossterm" },
+  { name = "termwiz",  reason = "ADR-0020: terminal UIs use ratatui + crossterm" },
+  { name = "ncurses", reason = "ADR-0020: terminal UIs use ratatui" },
+
   # ADR-0002: no general-purpose ORM.
   { name = "diesel",  reason = "ADR-0002: SQLx with hand-written, compile-checked SQL — no ORM" },
   { name = "sea-orm", reason = "ADR-0002: no ORM" },

@@ -90,6 +90,11 @@ makes the rules "the linter won't let you commit it" rather than just documentat
 | [0017](cross-cutting/0017-shared-helpers-in-a-neutral-module.md) | Shared helpers live in a neutral module, never borrowed sideways between sibling sub-applications |
 | [0018](cross-cutting/0018-braille-spinner-standard-loading-indicator.md) | Braille-character text spinner (`unicode-animations`) is the standard loading indicator across all frontends |
 | [0019](cross-cutting/0019-unknown-is-a-third-state-not-the-default.md) | A control whose shape depends on an unfinished request renders the spinner, not a guess (async state is tri-state) |
+| [0020](cross-cutting/0020-ratatui-crossterm-standard-tui-stack.md) | ratatui + crossterm is the standard TUI stack, in an app-owned immediate-mode loop |
+| [0021](cross-cutting/0021-tui-state-struct-and-testbackend.md) | A TUI draws from a plain state struct, and its screens are asserted with `TestBackend` |
+| [0022](cross-cutting/0022-tui-house-style-instrument-panel.md) | Terminal apps use the instrument-panel house style (rounded panels, RGB palette, live log, key bar) |
+| [0023](cross-cutting/0023-single-key-verbs-always-visible.md) | Terminal apps are driven by single-key verbs that are always on screen |
+| [0024](cross-cutting/0024-live-views-refresh-and-show-freshness.md) | A live view refreshes itself and shows that it is live |
 
 ### [starflask-monorepo](starflask-monorepo/) — multi-language generation platform
 
@@ -125,4 +130,6 @@ makes the rules "the linter won't let you commit it" rather than just documentat
 ---
 
 *Template: [`adr-template.md`](adr-template.md). Decision log generated 2026-06-03 from the
-state of `starflask-monorepo`, `metalcraft-agent`, and `noblevida-web`.*
+state of `starflask-monorepo`, `metalcraft-agent`, and `noblevida-web`. The terminal-UI ADRs
+(0020–0024) were added 2026-09-17 from `degen-tools` and `degen-radio`, which are the reference
+implementations for that house style.*
