@@ -1,13 +1,13 @@
-# ADR-0022: Terminal apps use the instrument-panel house style
+# ADR-0003 (tui): Terminal apps use the instrument-panel house style
 
 - **Status:** Accepted
 - **Date:** 2026-09-17
-- **Scope:** cross-cutting (all terminal applications)
+- **Scope:** tui (all terminal applications)
 - **Deciders:** Andy
 
 ## Context
 
-ADR-0018 gave the web frontends one recognizable loading aesthetic. Terminal apps deserve the same
+[Cross-cutting ADR-0018](../cross-cutting/0018-braille-spinner-standard-loading-indicator.md) gave the web frontends one recognizable loading aesthetic. Terminal apps deserve the same
 treatment: `degen-radio` and `degen-tools` should look like two instruments from one workshop, not
 two unrelated programs that happen to run in a terminal.
 

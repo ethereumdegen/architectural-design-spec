@@ -25,7 +25,8 @@ not merely discouraged in review.
 
 ## How to use these (for agents and humans)
 
-1. **Before starting work in a repo**, read its folder below *and* the `cross-cutting/` folder.
+1. **Before starting work in a repo**, read its folder below *and* the `cross-cutting/` folder —
+   plus [`tui/`](tui/) if the thing you are building draws a terminal UI.
 2. **Conform.** If your change conflicts with an Accepted ADR, you are almost certainly wrong —
    stop and reconsider. ADRs encode hard-won decisions.
 3. **If a decision genuinely needs to change**, do not edit the Accepted ADR (they are immutable).
@@ -90,11 +91,19 @@ makes the rules "the linter won't let you commit it" rather than just documentat
 | [0017](cross-cutting/0017-shared-helpers-in-a-neutral-module.md) | Shared helpers live in a neutral module, never borrowed sideways between sibling sub-applications |
 | [0018](cross-cutting/0018-braille-spinner-standard-loading-indicator.md) | Braille-character text spinner (`unicode-animations`) is the standard loading indicator across all frontends |
 | [0019](cross-cutting/0019-unknown-is-a-third-state-not-the-default.md) | A control whose shape depends on an unfinished request renders the spinner, not a guess (async state is tri-state) |
-| [0020](cross-cutting/0020-ratatui-crossterm-standard-tui-stack.md) | ratatui + crossterm is the standard TUI stack, in an app-owned immediate-mode loop |
-| [0021](cross-cutting/0021-tui-state-struct-and-testbackend.md) | A TUI draws from a plain state struct, and its screens are asserted with `TestBackend` |
-| [0022](cross-cutting/0022-tui-house-style-instrument-panel.md) | Terminal apps use the instrument-panel house style (rounded panels, RGB palette, live log, key bar) |
-| [0023](cross-cutting/0023-single-key-verbs-always-visible.md) | Terminal apps are driven by single-key verbs that are always on screen |
-| [0024](cross-cutting/0024-live-views-refresh-and-show-freshness.md) | A live view refreshes itself and shows that it is live |
+
+### [tui](tui/) — the terminal-UI house style (applies to every terminal app)
+
+Read these *and* `cross-cutting/` before building a terminal app. Reference implementations:
+`degen-tools` and `degen-radio`.
+
+| ADR | Decision |
+| --- | --- |
+| [0001](tui/0001-ratatui-crossterm-standard-tui-stack.md) | ratatui + crossterm is the standard TUI stack, in an app-owned immediate-mode loop |
+| [0002](tui/0002-state-struct-and-testbackend.md) | A TUI draws from a plain state struct, and its screens are asserted with `TestBackend` |
+| [0003](tui/0003-instrument-panel-house-style.md) | Terminal apps use the instrument-panel house style (rounded panels, RGB palette, live log, key bar) |
+| [0004](tui/0004-single-key-verbs-always-visible.md) | Terminal apps are driven by single-key verbs that are always on screen |
+| [0005](tui/0005-live-views-refresh-and-show-freshness.md) | A live view refreshes itself and shows that it is live |
 
 ### [starflask-monorepo](starflask-monorepo/) — multi-language generation platform
 
@@ -130,6 +139,6 @@ makes the rules "the linter won't let you commit it" rather than just documentat
 ---
 
 *Template: [`adr-template.md`](adr-template.md). Decision log generated 2026-06-03 from the
-state of `starflask-monorepo`, `metalcraft-agent`, and `noblevida-web`. The terminal-UI ADRs
-(0020–0024) were added 2026-09-17 from `degen-tools` and `degen-radio`, which are the reference
-implementations for that house style.*
+state of `starflask-monorepo`, `metalcraft-agent`, and `noblevida-web`. The [`tui/`](tui/) folder was
+added 2026-09-17 from `degen-tools` and `degen-radio`, the reference implementations of that house
+style.*

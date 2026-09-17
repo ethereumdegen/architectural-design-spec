@@ -1,8 +1,8 @@
-# ADR-0021: A TUI draws from a plain state struct, and its screens are asserted with TestBackend
+# ADR-0002 (tui): A TUI draws from a plain state struct, and its screens are asserted with TestBackend
 
 - **Status:** Accepted
 - **Date:** 2026-09-17
-- **Scope:** cross-cutting (all terminal applications)
+- **Scope:** tui (all terminal applications)
 - **Deciders:** Andy
 
 ## Context
@@ -53,5 +53,6 @@ assert on rendered screens with `TestBackend`.
   anywhere in its tests is reported — a TUI with no rendered-screen test.
 - Review: a panel function taking `&mut State`, or a widget body performing I/O (a file read, an
   HTTP call, a DB query) inside `draw`.
-- The secret-masking rule this protects is ADR-0025; the test asserting "the raw value is absent"
-  is that ADR's mechanical gate in a TUI.
+- A screen that renders a value it should only describe — a token, a key, a connection string —
+  is caught here and nowhere else, so every such app asserts the raw value is *absent* from the
+  buffer.

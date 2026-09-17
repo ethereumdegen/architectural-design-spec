@@ -4,6 +4,7 @@ This repository is a **decision log**, not application code. If you are an agent
 `starflask-monorepo`, `metalcraft-agent`, or `noblevida-web`:
 
 1. **Read [`README.md`](README.md)** and the relevant project folder + [`cross-cutting/`](cross-cutting/)
+   — and [`tui/`](tui/) when the thing you are building draws a terminal UI —
    **before writing code.** These ADRs encode the required conventions ("the taste") of those
    codebases.
 2. **Conform to every Accepted ADR.** If your change conflicts with one, you are almost certainly

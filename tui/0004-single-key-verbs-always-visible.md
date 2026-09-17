@@ -1,8 +1,8 @@
-# ADR-0023: Terminal apps are driven by single-key verbs that are always on screen
+# ADR-0004 (tui): Terminal apps are driven by single-key verbs that are always on screen
 
 - **Status:** Accepted
 - **Date:** 2026-09-17
-- **Scope:** cross-cutting (all terminal applications)
+- **Scope:** tui (all terminal applications)
 - **Deciders:** Andy
 
 ## Context

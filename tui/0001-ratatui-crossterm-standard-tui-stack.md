@@ -1,8 +1,8 @@
-# ADR-0020: ratatui + crossterm is the standard TUI stack
+# ADR-0001 (tui): ratatui + crossterm is the standard TUI stack
 
 - **Status:** Accepted
 - **Date:** 2026-09-17
-- **Scope:** cross-cutting (all terminal applications)
+- **Scope:** tui (all terminal applications)
 - **Deciders:** Andy
 
 ## Context
@@ -40,7 +40,7 @@ loop owned by the application.
 Alternatives considered and rejected:
 
 - **`cursive`** — retained-mode and callback-driven; a different mental model from the rest of our
-  Rust, and harder to drive from a plain state struct (see ADR-0021).
+  Rust, and harder to drive from a plain state struct (see [ADR-0002](0002-state-struct-and-testbackend.md)).
 - **Raw crossterm / termion drawing** — every app re-invents layout and wrapping.
 - **Prompt libraries (`dialoguer`, `inquire`)** — fine for a one-shot question, but they own the
   flow and cannot show a live view. Acceptable inside a wizard, never as the app's main screen.
@@ -48,7 +48,7 @@ Alternatives considered and rejected:
 ## Consequences
 
 - Terminal apps share a layout vocabulary; code and components move between them by copy-paste.
-- Immediate mode means every frame is a pure function of state, which is what makes ADR-0021's
+- Immediate mode means every frame is a pure function of state, which is what makes [ADR-0002](0002-state-struct-and-testbackend.md)'s
   snapshot tests possible.
 - A 250 ms poll costs a wakeup four times a second; for a dashboard this is invisible and it keeps
   animation (a pulsing indicator, a clock) honest without a second timer.

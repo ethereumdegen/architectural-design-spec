@@ -1,8 +1,8 @@
-# ADR-0024: A live view refreshes itself and shows that it is live
+# ADR-0005 (tui): A live view refreshes itself and shows that it is live
 
 - **Status:** Accepted
 - **Date:** 2026-09-17
-- **Scope:** cross-cutting (all terminal applications)
+- **Scope:** tui (all terminal applications)
 - **Deciders:** Andy
 
 ## Context
@@ -31,9 +31,9 @@ are live.
 - **Events are appended, not replaced.** A newest-first log of what the app did (with time, result
   and duration) is the primary trust-building element; keep a bounded ring (e.g. 500 entries) so
   memory is constant.
-- **Never redraw destructively.** Immediate mode redraws the whole frame from state (ADR-0021), so
+- **Never redraw destructively.** Immediate mode redraws the whole frame from state ([ADR-0002](0002-state-struct-and-testbackend.md)), so
   a refresh never leaves half-updated rows.
-- **Say what is unknown.** Where a value has not been read yet, follow ADR-0019: render the pending
+- **Say what is unknown.** Where a value has not been read yet, follow [cross-cutting ADR-0019](../cross-cutting/0019-unknown-is-a-third-state-not-the-default.md): render the pending
   state, not a plausible-looking zero.
 
 ## Consequences

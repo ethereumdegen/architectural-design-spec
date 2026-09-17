@@ -35,12 +35,12 @@ frontend). Drop them into a target repo, tune paths, and wire `adr-checks.sh` in
 | [0014](../cross-cutting/0014-axum-standard-http-framework.md) | Axum, not actix-web | `deny.toml` bans `actix-web`/`actix-*` | **hard** |
 | [0015](../cross-cutting/0015-sqlx-standard-db-client.md) | SQLx, not raw driver | `deny.toml` bans `tokio-postgres`/`degen-sql`/`postgres`; CI `cargo sqlx prepare --check` | **hard** |
 | [0016](../cross-cutting/0016-scope-based-authorization-from-roles.md) | Capabilities via `RequireScope`, mapping in one module | review + `adr-checks.sh` reminder for inline `scopes.contains` | heuristic |
-| [0020](../cross-cutting/0020-ratatui-crossterm-standard-tui-stack.md) | ratatui + crossterm only | `deny.toml` bans `cursive`/`termion`/`termwiz`/`ncurses` | **hard** |
-| [0020](../cross-cutting/0020-ratatui-crossterm-standard-tui-stack.md) | Reach crossterm through ratatui; enter the screen via `ratatui::init()` | `adr-checks.sh`: direct `crossterm` dep, or `enable_raw_mode` without `ratatui::init` | heuristic |
-| [0021](../cross-cutting/0021-tui-state-struct-and-testbackend.md) | Every TUI has a rendered-screen test | `adr-checks.sh`: ratatui crate with no `TestBackend` | heuristic |
-| [0022](../cross-cutting/0022-tui-house-style-instrument-panel.md) | House RGB palette, not terminal-theme colours | `adr-checks.sh`: `Color::Red` and friends | heuristic |
-| [0023](../cross-cutting/0023-single-key-verbs-always-visible.md) | Every key is advertised in the footer | `adr-checks.sh`: key handling with no footer/key bar in the crate | heuristic |
-| [0024](../cross-cutting/0024-live-views-refresh-and-show-freshness.md) | A live view shows it is live | `adr-checks.sh`: TUI crate that never reads `elapsed()` | heuristic |
+| [tui/0001](../tui/0001-ratatui-crossterm-standard-tui-stack.md) | ratatui + crossterm only | `deny.toml` bans `cursive`/`termion`/`termwiz`/`ncurses` | **hard** |
+| [tui/0001](../tui/0001-ratatui-crossterm-standard-tui-stack.md) | Reach crossterm through ratatui; enter the screen via `ratatui::init()` | `adr-checks.sh`: direct `crossterm` dep, or `enable_raw_mode` without `ratatui::init` | heuristic |
+| [tui/0002](../tui/0002-state-struct-and-testbackend.md) | Every TUI has a rendered-screen test | `adr-checks.sh`: ratatui crate with no `TestBackend` | heuristic |
+| [tui/0003](../tui/0003-instrument-panel-house-style.md) | House RGB palette, not terminal-theme colours | `adr-checks.sh`: `Color::Red` and friends | heuristic |
+| [tui/0004](../tui/0004-single-key-verbs-always-visible.md) | Every key is advertised in the footer | `adr-checks.sh`: key handling with no footer/key bar in the crate | heuristic |
+| [tui/0005](../tui/0005-live-views-refresh-and-show-freshness.md) | A live view shows it is live | `adr-checks.sh`: TUI crate that never reads `elapsed()` | heuristic |
 
 > **CORS** (the rejected-for-now rule): `adr-checks.sh` *warns* on `allow_any_origin` but never
 > fails the build, per the decision to hold off on a binding CORS ADR.
